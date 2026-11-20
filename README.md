@@ -28,6 +28,7 @@ don't load modules from a page opened straight from disk. If you double-click
 | `src/lib/prices.js` | Formats prices for the pages |
 | `src/home.js`, `src/deals-page.js` | Fill in the home page and the deals page |
 | `scripts/check.js` | Checks the project's Git repository: `node scripts/check.js` |
+| `.gitignore` | Keeps untracked files, such as `notes.txt`, out of Git |
 
 Weekly deals run from Wednesday to Tuesday, like the printed weekly ad.
 
