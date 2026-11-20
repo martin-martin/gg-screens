@@ -10,5 +10,5 @@ export const deals = [
   { item: "Fresh apple cider, 1 gallon", unit: "each", regular: 799, sale: 599 },
   { item: "Sweet potatoes", unit: "lb", regular: 149, sale: 119 },
   { item: "Canned pumpkin, 15 oz", unit: "each", regular: 249, sale: 199 },
-  { item: "Fresh cranberries, 12 oz bag", unit: "each", regular: 349, sale: 279 },
+  { item: "Fresh cranberries, 12 oz bag", unit: "each", regular: 349, sale: 249 },
 ];
