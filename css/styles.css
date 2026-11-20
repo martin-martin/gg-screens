@@ -1,0 +1,101 @@
+:root {
+  --green: #2f6b3a;
+  --cream: #fbf7ef;
+  --ink: #222;
+  font-family: system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--cream);
+}
+
+body {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--green);
+}
+
+.site-header a {
+  color: white;
+  text-decoration: none;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.site-header ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-header a[aria-current="page"] {
+  text-decoration: underline;
+}
+
+main {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 3rem;
+}
+
+.today-hours {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--green);
+}
+
+.hours th {
+  padding-right: 2rem;
+  text-align: left;
+}
+
+.deals {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.deal {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background: white;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 15%);
+}
+
+.deal h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.deal-price {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--green);
+}
+
+.deal-savings {
+  margin: 0;
+  color: #8a3b12;
+}
+
+.site-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #ddd;
+  font-size: 0.9rem;
+}

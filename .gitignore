@@ -1,0 +1,13 @@
+# The previous developer's notes, with the Wi-Fi password
+notes.txt
+
+# System files from macOS and Windows
+.DS_Store
+Thumbs.db
+
+# Editor settings and swap files
+.vscode/
+*.swp
+
+# Packages that npm installs
+node_modules/
