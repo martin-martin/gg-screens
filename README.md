@@ -40,5 +40,5 @@ Weekly deals run from Wednesday to Tuesday, like the printed weekly ad.
       holiday hours.
 - [x] Add the bakery to the departments page: fresh bread every morning, pies and
       cakes to order.
-- [ ] Fix the typo in "Produse" on the departments page.
+- [x] Fix the typo in "Produse" on the departments page.
 - [x] The phone number in the footer is old. The new one is (555) 014-2290.
