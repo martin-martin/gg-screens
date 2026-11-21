@@ -38,7 +38,7 @@ Weekly deals run from Wednesday to Tuesday, like the printed weekly ad.
       sweet potatoes are 99¢ a pound, and canned pumpkin is $1.79.
 - [ ] Close at 2 p.m. on Thanksgiving (Thursday, November 26). It's missing from the
       holiday hours.
-- [ ] Add the bakery to the departments page: fresh bread every morning, pies and
+- [x] Add the bakery to the departments page: fresh bread every morning, pies and
       cakes to order.
 - [ ] Fix the typo in "Produse" on the departments page.
 - [x] The phone number in the footer is old. The new one is (555) 014-2290.
