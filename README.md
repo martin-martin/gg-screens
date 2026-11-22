@@ -36,7 +36,7 @@ Weekly deals run from Wednesday to Tuesday, like the printed weekly ad.
 
 - [x] New weekly deals from Wednesday, November 25: eggs go back to $4.99 a dozen,
       sweet potatoes are 99¢ a pound, and canned pumpkin is $1.79.
-- [ ] Close at 2 p.m. on Thanksgiving (Thursday, November 26). It's missing from the
+- [x] Close at 2 p.m. on Thanksgiving (Thursday, November 26). It's missing from the
       holiday hours.
 - [x] Add the bakery to the departments page: fresh bread every morning, pies and
       cakes to order.
