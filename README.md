@@ -29,6 +29,7 @@ don't load modules from a page opened straight from disk. If you double-click
 | `src/home.js`, `src/deals-page.js` | Fill in the home page and the deals page |
 | `scripts/check.js` | Checks the project's Git repository: `node scripts/check.js` |
 | `.gitignore` | Keeps untracked files, such as `notes.txt`, out of Git |
+| `src/vendor/curbside.js` | A stand-in for Generic Curbside's pickup widget: `mountCurbside(element, { key })` |
 
 Weekly deals run from Wednesday to Tuesday, like the printed weekly ad.
 
@@ -42,3 +43,17 @@ Weekly deals run from Wednesday to Tuesday, like the printed weekly ad.
       cakes to order.
 - [x] Fix the typo in "Produse" on the departments page.
 - [x] The phone number in the footer is old. The new one is (555) 014-2290.
+
+### Next: the move to npm and Vite
+
+- [ ] Show an "Open now" badge on the home page that knows the holiday hours, so it
+      says the store is closed on Christmas Day and closes early on Christmas Eve.
+- [ ] Show the deals as this week's deals on the deals page while their week is on.
+      A deal week runs from Wednesday to Tuesday. Once it has ended, show the deals
+      with their dates instead, until the next week's deals arrive.
+- [ ] Take curbside pickup orders on the pickup page through Generic Curbside. Its
+      widget is in `src/vendor/curbside.js`, and it needs the store's publishable key
+      (`curb_pub_...`). The secret key (`curb_sec_...`) is for Generic Curbside's admin
+      only and never goes in the site.
+- [ ] Close at 3 p.m. on Christmas Eve, an hour earlier than now.
+- [ ] Open at 10 a.m. on New Year's Day, an hour later than now.
