@@ -56,4 +56,4 @@ Weekly deals run from Wednesday to Tuesday, like the printed weekly ad.
       (`curb_pub_...`). The secret key (`curb_sec_...`) is for Generic Curbside's admin
       only and never goes in the site.
 - [x] Close at 3 p.m. on Christmas Eve, an hour earlier than now.
-- [ ] Open at 10 a.m. on New Year's Day, an hour later than now.
+- [x] Open at 10 a.m. on New Year's Day, an hour later than now.
