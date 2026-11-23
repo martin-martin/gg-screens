@@ -1,5 +1,6 @@
 import { dealWeek, deals } from "./data/deals.js";
 import { formatDealPrice, formatPrice, savings } from "./lib/prices.js";
+import { dealWeekIsOn } from "./lib/deals.js";
 
 function formatDay(date) {
   return new Date(`${date}T12:00:00`).toLocaleDateString("en-US", {
@@ -9,8 +10,17 @@ function formatDay(date) {
   });
 }
 
-document.querySelector("#deal-week").textContent =
-  `Prices good ${formatDay(dealWeek.start)} through ${formatDay(dealWeek.end)}.`;
+// This week's deals while their week is on. Otherwise (before it starts, or once it has
+// ended) the same deals with their dates, until the next week's deals arrive.
+const start = formatDay(dealWeek.start);
+const end = formatDay(dealWeek.end);
+if (dealWeekIsOn(new Date(), dealWeek)) {
+  document.querySelector("#deals-heading").textContent = "This week's deals";
+  document.querySelector("#deal-week").textContent = `Prices good ${start} through ${end}.`;
+} else {
+  document.querySelector("#deals-heading").textContent = "Weekly deals";
+  document.querySelector("#deal-week").textContent = `Deals for ${start} through ${end}.`;
+}
 
 const list = document.querySelector("#deals");
 for (const deal of deals) {
