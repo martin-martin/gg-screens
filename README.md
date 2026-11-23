@@ -4,16 +4,25 @@ The website of Generic Grocery Co., a family-owned neighborhood grocery store at
 214 Main Street. It has produce, a bakery and a deli counter, and it's open every day,
 with shorter hours on Sundays.
 
-The site is plain HTML, CSS and JavaScript modules. There's nothing to install.
+The site is HTML, CSS and JavaScript modules, run and built with [Vite](https://vite.dev/).
 
 ## Run it
 
-Open this folder in VS Code, right-click `index.html`, and choose **Open in Integrated
-Browser**. The page opens in a tab inside VS Code.
+You need Node.js, which comes with npm. Install the project's packages once:
 
-The site needs a local server, because its JavaScript files are modules and browsers
-don't load modules from a page opened straight from disk. If you double-click
-`index.html` instead, the page shows up without hours or deals.
+```console
+npm install
+```
+
+Then start Vite's dev server, and open the address it prints in VS Code's integrated
+browser:
+
+```console
+npm run dev
+```
+
+The dev server runs as long as that command does. `npm run check` reports on the
+repository.
 
 ## Where things are
 
@@ -27,7 +36,8 @@ don't load modules from a page opened straight from disk. If you double-click
 | `src/lib/hours.js` | Works out the hours for a date, and whether the store is open |
 | `src/lib/prices.js` | Formats prices for the pages |
 | `src/home.js`, `src/deals-page.js` | Fill in the home page and the deals page |
-| `scripts/check.js` | Checks the project's Git repository: `node scripts/check.js` |
+| `scripts/check.js` | Checks the project's Git repository: `npm run check` |
+| `package.json`, `package-lock.json` | The packages the site needs, and their exact versions |
 | `.gitignore` | Keeps untracked files, such as `notes.txt`, out of Git |
 | `src/vendor/curbside.js` | A stand-in for Generic Curbside's pickup widget: `mountCurbside(element, { key })` |
 
