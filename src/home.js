@@ -1,8 +1,14 @@
 import { weeklyHours } from "./data/hours.js";
 import { holidays } from "./data/holidays.js";
-import { formatHours, hoursFor } from "./lib/hours.js";
+import { formatHours, hoursFor, isOpen } from "./lib/hours.js";
+import { badgeText } from "./lib/badge.js";
 
 const today = new Date();
+
+// The "Open now" badge, holiday hours included.
+const badge = document.querySelector("#open-badge");
+badge.textContent = badgeText(today);
+badge.classList.toggle("closed", !isOpen(today));
 
 // Today's hours, at the top of the page.
 const todayHours = hoursFor(today);

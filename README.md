@@ -35,6 +35,7 @@ repository.
 | `src/data/deals.js` | This week's deals. Prices are in cents |
 | `src/lib/hours.js` | Works out the hours for a date, and whether the store is open |
 | `src/lib/prices.js` | Formats prices for the pages |
+| `src/lib/badge.js` | The text of the home page's "Open now" badge |
 | `src/home.js`, `src/deals-page.js` | Fill in the home page and the deals page |
 | `scripts/check.js` | Checks the project's Git repository: `npm run check` |
 | `package.json`, `package-lock.json` | The packages the site needs, and their exact versions |
@@ -56,7 +57,7 @@ Weekly deals run from Wednesday to Tuesday, like the printed weekly ad.
 
 ### Next: the move to npm and Vite
 
-- [ ] Show an "Open now" badge on the home page that knows the holiday hours, so it
+- [x] Show an "Open now" badge on the home page that knows the holiday hours, so it
       says the store is closed on Christmas Day and closes early on Christmas Eve.
 - [ ] Show the deals as this week's deals on the deals page while their week is on.
       A deal week runs from Wednesday to Tuesday. Once it has ended, show the deals

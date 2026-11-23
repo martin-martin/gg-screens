@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { weeklyHours } from "../data/hours.js";
 import { holidays } from "../data/holidays.js";
 
@@ -56,4 +57,21 @@ export function formatHours(hours) {
     return "Closed";
   }
   return `${formatTime(hours.open)} to ${formatTime(hours.close)}`;
+}
+
+// The next moment the store opens after `date`, as a Date, holiday hours included.
+// Looks up to a week ahead, so a closed holiday is skipped.
+export function nextOpening(date) {
+  for (let offset = 0; offset < 8; offset += 1) {
+    const day = dayjs(date).add(offset, "day");
+    const hours = hoursFor(day.toDate());
+    if (!hours.closed) {
+      const [hour, minute] = hours.open.split(":").map(Number);
+      const opening = day.hour(hour).minute(minute).second(0).millisecond(0);
+      if (opening.isAfter(date)) {
+        return opening.toDate();
+      }
+    }
+  }
+  return null;
 }
