@@ -7,5 +7,8 @@
     "check": "node scripts/check.js"
   },
   "keywords": [],
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "dayjs": "^1.11.23"
+  }
 }
