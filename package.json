@@ -1,0 +1,11 @@
+{
+  "name": "generic-grocery",
+  "version": "1.0.0",
+  "description": "The website of Generic Grocery Co., a family-owned neighborhood grocery store at 214 Main Street. It has produce, a bakery and a deli counter, and it's open every day, with shorter hours on Sundays.",
+  "main": "index.js",
+  "scripts": {
+    "check": "node scripts/check.js"
+  },
+  "keywords": [],
+  "type": "module"
+}
