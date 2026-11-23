@@ -11,3 +11,6 @@ Thumbs.db
 
 # Packages that npm installs
 node_modules/
+
+# Vite's build output: npm run build makes it again
+dist/

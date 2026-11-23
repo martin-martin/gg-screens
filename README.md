@@ -21,8 +21,9 @@ browser:
 npm run dev
 ```
 
-The dev server runs as long as that command does. `npm run check` reports on the
-repository.
+The dev server runs as long as that command does. `npm run build` writes the site to
+`dist/`, the folder to publish, and `npm run preview` serves that build so you can check
+it first. `npm run check` reports on the repository.
 
 ## Where things are
 
@@ -39,6 +40,7 @@ repository.
 | `src/home.js`, `src/deals-page.js` | Fill in the home page and the deals page |
 | `scripts/check.js` | Checks the project's Git repository: `npm run check` |
 | `package.json`, `package-lock.json` | The packages the site needs, and their exact versions |
+| `vite.config.js` | Tells Vite to build all four pages, not only `index.html` |
 | `.gitignore` | Keeps untracked files, such as `notes.txt`, out of Git |
 | `src/vendor/curbside.js` | A stand-in for Generic Curbside's pickup widget: `mountCurbside(element, { key })` |
 
