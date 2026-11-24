@@ -6,6 +6,10 @@
 // The checks for the move to npm and Vite (package.json, node_modules/, the lockfile,
 // dist/, .env and the vite branch) each run only once their file or branch exists.
 // The npm check runs every time.
+//
+// The checks for GitHub run once the repository has a remote called origin. They read
+// your public repository on GitHub without logging in (its main branch and issues), so
+// they need an internet connection. Everything else works offline.
 
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, realpathSync } from "node:fs";
@@ -125,7 +129,8 @@ function checkCommits() {
   pass(`The history has ${count.out} commit(s).`);
 
   const vague = /^(update[sd]?|changes?|fix(es|ed)?|wip|stuff|misc|edit(s|ed)?|\.+)$/i;
-  const subjects = git("log", "--format=%h %s").out.split("\n");
+  // Git writes merge commits' subjects itself, so only your own commits are checked.
+  const subjects = git("log", "--no-merges", "--format=%h %s").out.split("\n");
   for (const line of subjects) {
     const [hash, ...words] = line.split(" ");
     const subject = words.join(" ");
@@ -417,11 +422,218 @@ function checkClean() {
   }
 }
 
+// --- GitHub (course 3 on) -----------------------------------------------------------
+
+// The week's work arrives as issues with these titles. They're found by title, because
+// their numbers depend on what else the repository has.
+const issueTitles = [
+  "Add next week's deals",
+  "Add the deli counter's hours to the departments page",
+  "Close at 1 p.m. on Thanksgiving",
+  "Open at 8 a.m. on Thanksgiving",
+  "Mark bananas down to 49¢ a pound",
+];
+
+// owner/name from a GitHub remote URL (https://github.com/owner/name.git or
+// git@github.com:owner/name.git), or null for another host.
+function gitHubRepository(url) {
+  const match = /github\.com[/:]([^/]+)\/([^/]+?)(\.git)?\/?$/.exec(url);
+  return match ? `${match[1]}/${match[2]}` : null;
+}
+
+async function gitHub(path) {
+  try {
+    const response = await fetch(`https://api.github.com${path}`, {
+      headers: { "User-Agent": "generic-grocery-check", Accept: "application/vnd.github+json" },
+      signal: AbortSignal.timeout(10000),
+    });
+    return { status: response.status, body: response.ok ? await response.json() : null };
+  } catch {
+    return { status: 0, body: null };
+  }
+}
+
+function checkRemote() {
+  const url = git("remote", "get-url", "origin");
+  if (!url.ok) {
+    return null;
+  }
+  const repository = gitHubRepository(url.out);
+  if (!repository) {
+    warn(`origin points at ${url.out}, which isn't on GitHub.`, "set origin to your GitHub repository's URL with git remote set-url origin <url>.");
+    return null;
+  }
+  pass(`origin is your GitHub repository, ${repository}.`);
+  return repository;
+}
+
+function checkUpstream() {
+  const upstream = git("rev-parse", "--abbrev-ref", "main@{upstream}");
+  if (!upstream.ok) {
+    fail("main has no upstream branch, so git push and git pull don't know where to go.", "git push -u origin main, once.");
+    return false;
+  }
+  pass(`main pushes to and pulls from ${upstream.out}.`);
+  // A fresh Git stops at the first pull where both sides have new commits until it's told
+  // how to combine them. This course merges.
+  if (!git("config", "pull.rebase").ok && !git("config", "pull.ff").ok) {
+    warn(
+      "Git doesn't know yet whether git pull should merge or rebase when both sides have new commits.",
+      "git config --global pull.rebase false, so git pull merges, as this course does.",
+    );
+  }
+  const counts = git("rev-list", "--left-right", "--count", "main...main@{upstream}");
+  const [ahead, behind] = counts.out.split(/\s+/).map(Number);
+  if (ahead && behind) {
+    warn(
+      `As of your last fetch, main and ${upstream.out} have both moved on: ${ahead} commit(s) here, ${behind} there.`,
+      "git pull to merge GitHub's commits into yours, then git push.",
+    );
+  } else if (ahead) {
+    warn(`main has ${ahead} commit(s) that aren't on GitHub yet.`, "git push.");
+  } else if (behind) {
+    warn(`As of your last fetch, GitHub has ${behind} commit(s) that main doesn't have yet.`, "git pull.");
+  }
+  return true;
+}
+
+function checkConflictMarkers() {
+  const markers = git("grep", "-l", "-E", "^(<<<<<<<|>>>>>>>)( |$)|^=======$");
+  if (markers.ok && markers.out) {
+    const files = markers.out.split("\n");
+    fail(
+      `Conflict markers are still in ${files.join(", ")}.`,
+      "open each file, keep what's right from both sides, delete the <<<<<<<, ======= and >>>>>>> lines, then commit.",
+    );
+    return false;
+  }
+  pass("No file has leftover conflict markers.");
+  return true;
+}
+
+// The Thanksgiving hours: two issues change the same line, so a merge has to keep both.
+function checkThanksgiving() {
+  const file = join(projectDir, "src", "data", "holidays.js");
+  if (!existsSync(file)) {
+    return;
+  }
+  const line = readFileSync(file, "utf8").split("\n").find((text) => text.includes('"Thanksgiving"'));
+  if (!line) {
+    return;
+  }
+  const opensAt8 = line.includes('open: "08:00"');
+  const closesAt1 = line.includes('close: "13:00"');
+  if (opensAt8 && closesAt1) {
+    pass("Thanksgiving's hours keep both changes: 8 a.m. to 1 p.m.");
+  } else if (opensAt8 || closesAt1) {
+    warn(
+      `Thanksgiving's hours have only one of the two changes: ${opensAt8 ? "it opens at 8 a.m. but doesn't close at 1 p.m." : "it closes at 1 p.m. but doesn't open at 8 a.m."}`,
+      "if both issues are done, the merge kept only one side. Fix the line in src/data/holidays.js and commit.",
+    );
+  }
+}
+
+// A deal priced below $1 a dozen eggs is a typo, not a deal.
+function checkEggPrice() {
+  const file = join(projectDir, "src", "data", "deals.js");
+  if (!existsSync(file)) {
+    return;
+  }
+  const eggs = readFileSync(file, "utf8").split("\n").find((text) => text.includes('"Large brown eggs"'));
+  const sale = eggs && /sale:\s*(\d+)/.exec(eggs);
+  if (sale && Number(sale[1]) < 100) {
+    fail(
+      `Eggs are on sale for ${sale[1]}¢ a dozen in src/data/deals.js, which looks like a typo.`,
+      "find the commit that changed it with git log -p src/data/deals.js, then git revert <hash> and push.",
+    );
+  }
+}
+
+async function checkGitHub(repository) {
+  const repo = await gitHub(`/repos/${repository}`);
+  if (repo.status === 0) {
+    warn("GitHub didn't answer, so the GitHub checks were skipped.", "check your internet connection, then run the check again.");
+    return;
+  }
+  if (repo.status === 404) {
+    fail(
+      `GitHub shows no public repository ${repository}.`,
+      "make sure the repository exists and is public (Settings, General, Danger Zone, Change visibility).",
+    );
+    return;
+  }
+  if (!repo.body) {
+    warn(`GitHub answered with status ${repo.status}, so the GitHub checks were skipped.`, "wait a few minutes, then run the check again.");
+    return;
+  }
+  pass(`GitHub has your public repository ${repository}.`);
+
+  const branch = await gitHub(`/repos/${repository}/commits/main`);
+  const local = git("rev-parse", "main").out;
+  if (branch.body?.sha === local) {
+    pass("GitHub's main is the same commit as yours.");
+  } else if (branch.body?.sha) {
+    const known = git("cat-file", "-e", `${branch.body.sha}^{commit}`).ok;
+    warn(
+      `GitHub's main is at ${branch.body.sha.slice(0, 7)}, yours is at ${local.slice(0, 7)}.`,
+      known
+        ? "git push, so GitHub gets your commits. If you just did, wait a minute: GitHub's answer can be a minute old."
+        : "git pull to get GitHub's commits, then git push.",
+    );
+  } else {
+    warn(`GitHub didn't say where its main is (status ${branch.status}).`, "wait a few minutes, then run the check again.");
+  }
+
+  const issues = await gitHub(`/repos/${repository}/issues?state=all&per_page=100`);
+  if (!Array.isArray(issues.body)) {
+    warn(
+      `GitHub didn't list the repository's issues (status ${issues.status}), so the issue checks were skipped.`,
+      "wait a few minutes, then run the check again. GitHub answers about 60 checks an hour from one network.",
+    );
+    return;
+  }
+  const byTitle = new Map(
+    issues.body.filter((issue) => !issue.pull_request).map((issue) => [issue.title.trim().toLowerCase(), issue]),
+  );
+  const found = issueTitles.map((title) => [title, byTitle.get(title.toLowerCase())]);
+  if (found.every(([, issue]) => !issue)) {
+    warn("None of this week's issues are on GitHub yet.", "create them from the lesson, with their titles exactly as given.");
+    return;
+  }
+  for (const [title, issue] of found) {
+    if (!issue) {
+      warn(
+        `There's no issue "${title}" yet.`,
+        "create it from the lesson, with the title exactly as given. If you just did, wait a minute: GitHub's answer can be a minute old.",
+      );
+    } else if (issue.state === "closed") {
+      pass(`Issue #${issue.number} "${title}" is closed.`);
+    } else {
+      warn(
+        `Issue #${issue.number} "${title}" is still open.`,
+        `once its work is on main, close it: Closes #${issue.number} in a commit message, or close it on GitHub. If you just did, wait a minute: GitHub's answer can be a minute old.`,
+      );
+    }
+  }
+}
+
 if (checkGitInstalled() && checkRepository()) {
   checkIdentity();
   checkIgnored();
   checkCommits();
   checkMoveToVite();
+  const repository = checkRemote();
+  if (repository) {
+    checkUpstream();
+  }
+  // The data checks read the files, which only make sense without conflict markers.
+  if (checkConflictMarkers()) {
+    checkThanksgiving();
+    checkEggPrice();
+  }
+  if (repository) {
+    await checkGitHub(repository);
+  }
   checkClean();
 }
 report();

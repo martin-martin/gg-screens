@@ -54,25 +54,5 @@ Weekly deals run from Wednesday to Tuesday, like the printed weekly ad.
 
 ## To do
 
-- [x] New weekly deals from Wednesday, November 25: eggs go back to $4.99 a dozen,
-      sweet potatoes are 99¢ a pound, and canned pumpkin is $1.79.
-- [x] Close at 2 p.m. on Thanksgiving (Thursday, November 26). It's missing from the
-      holiday hours.
-- [x] Add the bakery to the departments page: fresh bread every morning, pies and
-      cakes to order.
-- [x] Fix the typo in "Produse" on the departments page.
-- [x] The phone number in the footer is old. The new one is (555) 014-2290.
-
-### Next: the move to npm and Vite
-
-- [x] Show an "Open now" badge on the home page that knows the holiday hours, so it
-      says the store is closed on Christmas Day and closes early on Christmas Eve.
-- [x] Show the deals as this week's deals on the deals page while their week is on.
-      A deal week runs from Wednesday to Tuesday. Once it has ended, show the deals
-      with their dates instead, until the next week's deals arrive.
-- [x] Take curbside pickup orders on the pickup page through Generic Curbside. Its
-      widget is in `src/vendor/curbside.js`, and it needs the store's publishable key
-      (`curb_pub_...`). The secret key (`curb_sec_...`) is for Generic Curbside's admin
-      only and never goes in the site.
-- [x] Close at 3 p.m. on Christmas Eve, an hour earlier than now.
-- [x] Open at 10 a.m. on New Year's Day, an hour later than now.
+The work now arrives as issues on the project's GitHub repository. A commit that
+finishes one closes it, with `Closes #` and the issue's number in its message.
