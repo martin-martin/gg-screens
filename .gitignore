@@ -14,3 +14,6 @@ node_modules/
 
 # Vite's build output: npm run build makes it again
 dist/
+
+# Keys for this computer only. .env.example shows what goes in it
+.env

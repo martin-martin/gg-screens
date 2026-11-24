@@ -21,6 +21,9 @@ browser:
 npm run dev
 ```
 
+The pickup page needs the store's publishable Generic Curbside key. Copy `.env.example`
+to `.env` and put the key (`curb_pub_...`) in it. `.env` stays out of Git.
+
 The dev server runs as long as that command does. `npm run build` writes the site to
 `dist/`, the folder to publish, and `npm run preview` serves that build so you can check
 it first. `npm run check` reports on the repository.
@@ -44,6 +47,8 @@ it first. `npm run check` reports on the repository.
 | `vite.config.js` | Tells Vite to build all four pages, not only `index.html` |
 | `.gitignore` | Keeps untracked files, such as `notes.txt`, out of Git |
 | `src/vendor/curbside.js` | A stand-in for Generic Curbside's pickup widget: `mountCurbside(element, { key })` |
+| `src/pickup.js` | Puts Generic Curbside's widget on the pickup page, with the key from `.env` |
+| `.env.example` | The values `.env` needs, with a placeholder instead of the key |
 
 Weekly deals run from Wednesday to Tuesday, like the printed weekly ad.
 
@@ -65,7 +70,7 @@ Weekly deals run from Wednesday to Tuesday, like the printed weekly ad.
 - [x] Show the deals as this week's deals on the deals page while their week is on.
       A deal week runs from Wednesday to Tuesday. Once it has ended, show the deals
       with their dates instead, until the next week's deals arrive.
-- [ ] Take curbside pickup orders on the pickup page through Generic Curbside. Its
+- [x] Take curbside pickup orders on the pickup page through Generic Curbside. Its
       widget is in `src/vendor/curbside.js`, and it needs the store's publishable key
       (`curb_pub_...`). The secret key (`curb_sec_...`) is for Generic Curbside's admin
       only and never goes in the site.
